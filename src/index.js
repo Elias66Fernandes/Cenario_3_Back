@@ -15,7 +15,7 @@ app.use(cors());
 app.get("/users", async (req, res) => {
   try {
     // Consulta todos os usuários no banco de dados
-    const users = await prisma.users.findMany();
+    const users = await prisma.user.findMany();
 
     if(users.length > 0){
       // Retorna a lista de usuários como resposta
@@ -36,7 +36,7 @@ app.post("/users", async (req, res) => {
     const { name, email } = req.body;
 
     // Crie um novo usuário no banco de dados
-    const newUser = await prisma.users.create({
+    const newUser = await prisma.user.create({
       data: {
         name,
         email,
@@ -64,7 +64,7 @@ app.delete("/users/:id", async (req, res) => {
     }
 
     // Tenta apagar o usuário com o ID fornecido
-    const deletedUser = await prisma.users.delete({
+    const deletedUser = await prisma.user.delete({
       where: {
         id: userId,
       },
@@ -97,7 +97,7 @@ app.put("/users/:id", async (req, res) => {
     const { name, email } = req.body; // Obtém os dados do corpo da requisição
 
     // Tenta atualizar o usuário com o ID fornecido
-    const updatedUser = await prisma.users.update({
+    const updatedUser = await prisma.user.update({
       where: {
         id: userId,
       },
@@ -125,7 +125,7 @@ app.get("/users/:name", async (req, res) => {
     const userName = req.params.name; // Obtém o parâmetro de nome da URL
 
     // Consulta usuários no banco de dados com o nome específico
-    const usersWithSpecificName = await prisma.users.findMany({
+    const usersWithSpecificName = await prisma.user.findMany({
       where: {
         name: {
           contains: userName,
@@ -153,7 +153,7 @@ app.get("/users/:id", async (req, res) => {
     }
 
     // Consulta um usuário no banco de dados pelo ID
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
