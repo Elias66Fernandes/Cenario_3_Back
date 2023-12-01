@@ -11,28 +11,165 @@ const cors = require("cors");
 app.use(bodyParser.json());
 app.use(cors());
 
-//rota que lista todos os usuários cadastrados
+//rota que listar todos os usuários cadastrados
 app.get("/users", async (req, res) => {
+  try {
+    // Consulta todos os usuários no banco de dados
+    const users = await prisma.users.findMany();
+
+    if(users.length > 0){
+      // Retorna a lista de usuários como resposta
+      res.send(users);
+    }else{
+      res.send("Sem usuários cadastrados!")
+    }
+  } catch (error) {
+    // Se houver um erro, envia uma resposta de erro
+    console.error("Erro ao listar todos os usuários cadastrados", error);
+  }
 });
 
 //rota que cadastra um usuário
 app.post("/users", async (req, res) => {
+  try {
+    // Obtenha os dados do corpo da requisição
+    const { name, email } = req.body;
+
+    // Crie um novo usuário no banco de dados
+    const newUser = await prisma.users.create({
+      data: {
+        name,
+        email,
+      },
+    });
+    // Retorna o novo usuário criado como resposta
+    res.send(newUser);
+
+  } catch (error) {
+    // Se houver um erro, envie uma resposta de erro
+    console.error("Erro ao criar usuário",error);
+    res.send('Erro ao cadastrar usuário.');
+  }
 });
 
 //rota que apaga um usuário, passando o id
 app.delete("/users/:id", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+
+    // Verifica se o ID é um número válido
+    if (isNaN(userId)) {
+      res.send('ID inválido.');
+      return;
+    }
+
+    // Tenta apagar o usuário com o ID fornecido
+    const deletedUser = await prisma.users.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    // Verifica se o usuário foi apagado com sucesso
+    if (deletedUser) {
+      res.send("Usuário apagado com sucesso.");
+    } else {
+      res.send("Usuário não encontrado.");
+    }
+  } catch (error) {
+    // Se houver um erro, envia uma resposta de erro
+    console.error("Erro ao apagar um usuário passando o id", error);
+    res.send("Erro ao apagar usuário.");
+  }
 });
 
 //rota que atualiza um usuário, pelo id
 app.put("/users/:id", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+
+    // Verifica se o ID é um número válido
+    if (isNaN(userId)) {
+      res.send('ID inválido.');
+      return;
+    }
+
+    const { name, email } = req.body; // Obtém os dados do corpo da requisição
+
+    // Tenta atualizar o usuário com o ID fornecido
+    const updatedUser = await prisma.users.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name,
+        email,
+      },
+    });
+
+    // Verifica se o usuário foi atualizado com sucesso
+    if (updatedUser) {
+      res.send('Usuário atualizado com sucesso.');
+    } else {
+      res.send('Usuário não encontrado.');
+    }
+  } catch (error) {
+    // Se houver um erro, envie uma resposta de erro
+    console.error('Erro ao atualizar usuário.', error);
+  }
 });
 
 //rota que lista usuários que contenham o nome específico
 app.get("/users/:name", async (req, res) => {
+  try {
+    const userName = req.params.name; // Obtém o parâmetro de nome da URL
+
+    // Consulta usuários no banco de dados com o nome específico
+    const usersWithSpecificName = await prisma.users.findMany({
+      where: {
+        name: {
+          contains: userName,
+        },
+      },
+    });
+
+    // Retorna a lista de usuários com o nome específico como resposta
+    res.send(usersWithSpecificName);
+  } catch (error) {
+    // Se houver um erro, envie uma resposta de erro
+    console.error('Erro ao buscar usuários.', error);
+  }
 });
 
 //rota que lista um usuário pelo id
 app.get("/users/:id", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+
+    // Verifica se o ID é um número válido
+    if (isNaN(userId)) {
+      res.send('ID inválido.');
+      return;
+    }
+
+    // Consulta um usuário no banco de dados pelo ID
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    // Verifica se o usuário foi encontrado
+    if (user) {
+      // Retorna o usuário como resposta
+      res.send(user);
+    } else {
+      res.send('Usuário não encontrado.');
+    }
+  } catch (error) {
+    // Se houver um erro, envie uma resposta de erro
+    console.error('Erro ao buscar usuário.', error);
+  }
 });
 
 // Inicie o servidor na porta especificada
