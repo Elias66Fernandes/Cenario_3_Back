@@ -42,8 +42,7 @@ app.post("/users", async (req, res) => {
         email,
       },
     });
-    // Retorna o novo usuário criado como resposta
-    res.send(newUser);
+    res.send("Usuário Criado!");
 
   } catch (error) {
     // Se houver um erro, envie uma resposta de erro
