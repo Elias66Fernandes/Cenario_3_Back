@@ -44,18 +44,25 @@ app.post("/user", async (req, res) => {
 
 //rota que apaga um usuário, passando o id
 app.delete("/user/:id", async (req, res) => {
-  const { id } = req.params;
-  await prisma.user.delete({
-    where: {
-      id: Number(id),
-    },
-  });
-  return res.sendStatus(200);
+  try{
+    const { id } = req.params;
+    await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    return res.sendStatus(200);
+  }catch{
+    console.error("Erro ao deletar usuário:", error);
+    return res.status(500).send("Erro Interno do Servidor");
+  }
+
 });
 
 //rota que atualiza um usuário, pelo id
 app.put("/user/:id", async (req, res) => {
-  const { id } = req.params;
+  try{
+    const { id } = req.params;
   const dados = req.body;
   await prisma.user.update({
     where: {
@@ -67,35 +74,51 @@ app.put("/user/:id", async (req, res) => {
     },
   });
   return res.sendStatus(200);
+  }catch{
+    console.error("Erro ao atualizar usuário:", error);
+    return res.status(500).send("Erro Interno do Servidor");
+  }
 });
 
 //rota que lista usuários que contenham o nome específico
 app.get("/users/:name", async (req, res) => {
-  const name = req.params.name;
-  const user = await prisma.user.findMany({
-    where: {
-      name: name,
-    },
-  });
-  if (user.length > 0){
-    return res.status(200).send(user);
-  }else{
-    return res.status(404).send("Usuário não encontrado");
+  try{
+    const name = req.params.name;
+    const user = await prisma.user.findMany({
+      where: {
+        name: name,
+      },
+    });
+    if (user.length > 0){
+      return res.status(200).send(user);
+    }else{
+      return res.status(404).send("Usuário não encontrado");
+    }
+  }catch{
+    console.error("Erro ao listar usuários que contenham o nomes específicos:", error);
+    return res.status(500).send("Erro Interno do Servidor");
   }
+
 });
 
 //rota que lista um usuário pelo id
 app.get("/user/:id", async (req, res) => {
-  const { id } = req.params;
-  const user = await prisma.user.findMany({
-    where: {
-      id: Number(id),
-    },
-  });
-  if (user.length > 0){
-    return res.status(200).send(user);
-  }else{
-    return res.status(404).send("Usuário não encontrado");
+  
+  try{
+    const { id } = req.params;
+    const user = await prisma.user.findMany({
+      where: {
+        id: Number(id),
+      },
+    });
+    if (user.length > 0){
+      return res.status(200).send(user);
+    }else{
+      return res.status(404).send("Usuário não encontrado");
+    }
+  }catch{
+    console.error("Erro ao listar um usuário pelo id:", error);
+    return res.status(500).send("Erro Interno do Servidor");
   }
 });
 
