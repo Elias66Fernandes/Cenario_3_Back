@@ -36,7 +36,7 @@ app.post("/users", async (req, res) => {
     const { name, email } = req.body;
 
     // Crie um novo usuário no banco de dados
-    const newUser = await prisma.users.create({
+    const newUser = await prisma.user.create({
       data: {
         name,
         email,
