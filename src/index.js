@@ -28,7 +28,7 @@ app.get("/users", async (req, res) => {
     console.error("Erro ao listar todos os usuários cadastrados", error);
   }
 });
-
+/*
 //rota que cadastra um usuário
 app.post("/users", async (req, res) => {
   try {
@@ -59,7 +59,7 @@ app.post("/users", async (req, res) => {
     console.error("Erro ao criar usuário",error);
   }
 });
-/*
+
 //rota que apaga um usuário, passando o id
 app.delete("/users/:id", async (req, res) => {
   try {
