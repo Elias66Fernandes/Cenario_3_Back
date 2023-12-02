@@ -33,26 +33,26 @@ app.get("/users", async (req, res) => {
 app.post("/users", async (req, res) => {
   try {
     
-    // Obtenha os dados do corpo da requisição
-    const { name, email } = req.body;
+    const data = req.body;
 
-    // Verifique se os dados necessários estão presentes
-    if (!name || !email) {
-      return res.send("Nome e email são obrigatórios.");
+    // Validar os dados recebidos
+    if (!data || !data.name || !data.email) {
+      return res.status(400).send("Nome e email são obrigatórios.");
     }
 
     // Crie um novo usuário no banco de dados
     await prisma.user.create({
       data: {
-        name,
-        email,
+        name: data.name,
+        email: data.email,
       },
     });
 
     // Desconecte do Prisma após a operação
     await prisma.$disconnect();
 
-    res.status(201).send("Usuário criado com sucesso!");
+    // Responda com um código de status 201 (Created)
+    return res.sendStatus(201);
 
   } catch (error) {
     // Se houver um erro, envie uma resposta de erro
