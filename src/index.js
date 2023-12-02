@@ -15,7 +15,7 @@ app.use(cors());
 app.get("/users", async (req, res) => {
   try {
     // Consulta todos os usuários no banco de dados
-    const users = await prisma.users.findMany();
+    const users = await prisma.user.findMany();
 
     if(users.length > 0){
       // Retorna a lista de usuários como resposta
