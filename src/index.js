@@ -32,17 +32,27 @@ app.get("/users", async (req, res) => {
 //rota que cadastra um usuário
 app.post("/users", async (req, res) => {
   try {
+    
     // Obtenha os dados do corpo da requisição
     const { name, email } = req.body;
 
+    // Verifique se os dados necessários estão presentes
+    if (!name || !email) {
+      return res.send("Nome e email são obrigatórios.");
+    }
+
     // Crie um novo usuário no banco de dados
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         email,
       },
     });
-    res.send("Usuário Criado!");
+
+    // Desconecte do Prisma após a operação
+    await prisma.$disconnect();
+
+    res.status(201).send("Usuário criado com sucesso!");
 
   } catch (error) {
     // Se houver um erro, envie uma resposta de erro
