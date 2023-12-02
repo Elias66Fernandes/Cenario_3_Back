@@ -59,7 +59,7 @@ app.post("/users", async (req, res) => {
     console.error("Erro ao criar usuário",error);
   }
 });
-
+/*
 //rota que apaga um usuário, passando o id
 app.delete("/users/:id", async (req, res) => {
   try {
@@ -179,7 +179,7 @@ app.get("/users/:id", async (req, res) => {
     console.error('Erro ao buscar usuário.', error);
   }
 });
-
+*/
 // Inicie o servidor na porta especificada
 const server = app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
