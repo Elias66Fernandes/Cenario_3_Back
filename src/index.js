@@ -48,7 +48,6 @@ app.post("/users", async (req, res) => {
   } catch (error) {
     // Se houver um erro, envie uma resposta de erro
     console.error("Erro ao criar usuário",error);
-    res.send('Erro ao cadastrar usuário.');
   }
 });
 
