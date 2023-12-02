@@ -12,25 +12,34 @@ app.use(cors());
 
 //rota que listar todos os usuários cadastrados
 app.get("/users", async (req, res) => {
+  try{
+    const users = await prisma.user.findMany();
 
-  const users = await prisma.user.findMany();
-
-  if (users.length > 0){
-    return res.status(200).send(users);
-  }else{
-    return res.status(404).send("Nenhum usuário foi encontrado");}
+    if (users.length > 0){
+      return res.status(200).send(users);
+    }else{
+      return res.status(404).send("Nenhum usuário foi encontrado");}
+  }catch(error){
+    console.error("Erro ao buscar usuários:", error);
+    return res.status(500).send("Erro Interno do Servidor");
+  }
 });
 
 //rota que cadastra um usuário
 app.post("/user", async (req, res) => {
-  const dados = req.body;
-  await prisma.user.create({
-    dados: {
-      name: dados.name,
-      email: dados.email,
-    },
-  });
-  return res.sendStatus(201);
+  try{
+    const dados = req.body;
+    await prisma.user.create({
+      data: {
+        name: dados.name,
+        email: dados.email,
+      },
+    });
+    return res.sendStatus(201);
+  }catch(error){
+    console.error("Erro ao cadastrar usuários:", error);
+    return res.status(500).send("Erro Interno do Servidor");
+  }
 });
 
 //rota que apaga um usuário, passando o id
