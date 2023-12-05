@@ -9,7 +9,7 @@ const cors = require("cors");
 
 app.use(bodyParser.json());
 app.use(cors());
-/*
+
 //rota que listar todos os usuários cadastrados
 app.get("/users", async (req, res) => {
   try{
@@ -121,7 +121,7 @@ app.get("/user/:id", async (req, res) => {
     return res.status(500).send("Erro Interno do Servidor");
   }
 });
-*/
+
 // Inicie o servidor na porta especificada
 const server = app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
